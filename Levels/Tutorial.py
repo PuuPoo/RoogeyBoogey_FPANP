@@ -1,9 +1,9 @@
 import pygame
+from Character.Player import Player
 
 def Tutorial(screen):
 
     #Setting the screen size
-    screen = pygame.display.set_mode((928, 793))
     pygame.display.set_caption("Roogey Boogey")
 
 
@@ -22,7 +22,8 @@ def Tutorial(screen):
     gameRunning = True
 
 
-
+    #Making the character
+    Knight = Player(200, 200)
 
 
     while gameRunning:
@@ -38,7 +39,12 @@ def Tutorial(screen):
                 gameRunning = False
 
     
-        screen.fill((0, 0, 0))
+        screen.fill((255, 255, 255))
+
+
+        #Initalizing the Player into the game 
+        Knight.update()
+        
 
 
         # updates the frames of the game 

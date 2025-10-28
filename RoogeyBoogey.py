@@ -1,4 +1,4 @@
-from Menu import menu
+from Levels.Menu import menu
 
 def main():
     menu()

@@ -1,6 +1,6 @@
 import pygame
-from button import Button
-from Tutorial import Tutorial
+from Functionality.button import Button
+from Levels.Tutorial import Tutorial
 
 def menu():
     #Initializing pygame
