@@ -40,15 +40,16 @@ class Player():
         attkSheet = animations.animationSheet(characterAttkAnimation)
         
 
-        idle_y_list = [38, 38, 38, 38, 38, 38] 
-        walk_y_list = [38, 38, 38, 38, 38, 38, 38, 38] # Example, you'll need actual values
-        attk_y_list = [38, 31, 32, 35, 41, 40] # Example, using the lowest point (31) for attack
+        #Made the list of the frames starting y coordinates cuz cant find logic to do it well
+        idleYList = [38, 38, 38, 38, 38, 38] 
+        walkYList = [38, 38, 38, 38, 38, 38, 38, 38] 
+        attkYList = [38, 31, 32, 35, 41, 40] 
 
 
         #Calling the method to construct the animation sheet
-        self.idleFrames = idleSheet.loadAnimation(41, idle_y_list, 16, 18, 84, 7, 6)
-        self.walkFrames = walkSheet.loadAnimation(41, walk_y_list, 16, 18, 84, 7, 8)
-        self.attkFrames = attkSheet.loadAnimation(41, attk_y_list, 32, 23, 68, 7, 6)
+        self.idleFrames = idleSheet.loadAnimation(41, idleYList, 16, 18, 84, 7, 6)
+        self.walkFrames = walkSheet.loadAnimation(41, walkYList, 16, 18, 84, 7, 8)
+        self.attkFrames = attkSheet.loadAnimation(41, attkYList, 32, 23, 68, 7, 6)
 
         #Storing all the animation into 1 list
         self.allCharacterAnimation.append(self.idleFrames)
