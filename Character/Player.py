@@ -12,21 +12,42 @@ class Player():
 
 
         #PLAYER ANIMATION
-        #Creating the path to the idleAnimation sheet
-        characterIdleAnimation = pygame.image.load("Assets/Character/Player.png").convert_alpha()
+        
+        #Main list to store all the animation frames 
+        self.allCharacterAnimation = []
 
+        #Counter to hold which type of animation should be played
+        self.action = 0
+        #Counter to track the previous action state
+        self.previousAction = 0
+
+        #Attacking state check
+        self.isAttacking = False
+
+
+        #Creating the path to the Animation sheets
+        characterIdleAnimation = pygame.image.load("Assets/Character/PlayerIdle.png").convert_alpha()
+        characterWalkAnimation = pygame.image.load("Assets/Character/PlayerWalk.png").convert_alpha()
+        characterAttkAnimation = pygame.image.load("Assets/Character/PlayerAttk.png").convert_alpha()
 
 
 
         #Making the animation class and sending the folder path
         idleSheet = animations.animationSheet(characterIdleAnimation)
-
-
+        walkSheet = animations.animationSheet(characterWalkAnimation)
+        attkSheet = animations.animationSheet(characterAttkAnimation)
+        
 
 
         #Calling the method to construct the animation sheet
         self.idleFrames = idleSheet.loadAnimation(41, 38, 16, 18, 84, 7, 6)
+        self.walkFrames = walkSheet.loadAnimation(41, 38, 16, 18, 84, 7, 8)
+        self.attkFrames = attkSheet.loadAnimation(41, 38, 16, 18, 84, 7, 6)
 
+        #Storing all the animation into 1 list
+        self.allCharacterAnimation.append(self.idleFrames)
+        self.allCharacterAnimation.append(self.walkFrames)
+        self.allCharacterAnimation.append(self.attkFrames)
 
 
 
@@ -34,6 +55,7 @@ class Player():
         self.currentFrame = 0
         self.animationSpeed = 0.1
         self.frameTimer = 0
+        self.flip = False
 
 
 
@@ -53,10 +75,15 @@ class Player():
         self.isJumping = False #Checks if player jumps
 
 
-    
+    #Player Attack Animation --------------------------------------------------------------------------------------
+    def attack(self):
+        if self.isAttacking == False:
+            self.isAttacking = True
+            self.currentFrame = 0
+            self.frameTimer = 0
 
 
-    #Player updater (draws the player on the screen)
+    #Player updater (draws the player on the screen) ---------------------------------------------------------------------------
     def update(self):
         
 
@@ -68,12 +95,14 @@ class Player():
         dy = 0
         key = pygame.key.get_pressed()
 
-        #Controls
+        #Controls --------------------------------------------------------------------------------------------
         if key[pygame.K_a]:
             dx -= 5
+            self.flip = True
 
         if key[pygame.K_d]:
             dx += 5
+            self.flip = False
 
         #Check for player input to jump 
         if (key[pygame.K_w] or key[pygame.K_SPACE]) and self.isJumping == False:
@@ -83,7 +112,10 @@ class Player():
         #Give back the ability for the player to jump again
         if (key[pygame.K_w] or key[pygame.K_SPACE]) == False:
             self.isJumping = False
-    
+
+
+
+
         #Gravity and jump
         self.velocityY += 1
 
@@ -116,19 +148,60 @@ class Player():
 
 
 
-        #ANIMATION LOGIC
+        #ANIMATION LOGIC ----------------------------------------------------------------------------------------
+        #Changing animation based on movement
+        if self.isAttacking:
+            self.action = 2
+        elif dx != 0:
+            self.action = 1
+        else:
+            self.action = 0
+
+
+        #Checks if there is change in player action. If there is resets all frame back to 0 along with the timer
+        if self.action != self.previousAction:
+            self.currentFrame = 0
+            self.frameTimer = 0
+            self.previousAction = self.action 
+
+
+
+
+
+
+        #Gets the animation frames from the main list and puts the needed one in the current animation list
+        currentAnimationList = self.allCharacterAnimation[self.action]
+
 
         #Increases the frame timer with the animation speed timer 
         self.frameTimer += self.animationSpeed
 
-        #When timer reaches 1, switch frames to the one after it, when it reaches its length resets back to 0
+        # When timer reaches 1, switch frames to the one after it, when it reaches its length resets back to 0
         if self.frameTimer >= 1:
-            self.currentFrame = (self.currentFrame + 1) % len(self.idleFrames)
+            self.currentFrame += 1
             self.frameTimer = 0
+
+            #Checks if the attack animation is over
+            if self.action == 2 and self.currentFrame >= len(currentAnimationList):
+                self.isAttacking = False  # Resets the attack back to false
+                self.action = 0           # Return to idle animation
+                self.currentFrame = 0     # Start the idle animation from frame 0
+
+            # For all other animations, loop normally
+            elif self.currentFrame >= len(currentAnimationList):
+                self.currentFrame = 0
+
+
+
+
+
+
+        #Gets the wanted frame from the current list to be drawned
+        frameDrawn = currentAnimationList[self.currentFrame]
 
 
         #The updated frame is shown to the screen
-        self.characterAsset = self.idleFrames[self.currentFrame]
+        self.characterAsset = pygame.transform.flip(frameDrawn, self.flip, False)
 
 
 

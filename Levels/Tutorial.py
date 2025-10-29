@@ -38,6 +38,10 @@ def Tutorial(screen):
             if event.type == pygame.QUIT:
                 gameRunning = False
 
+            if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.button == 1:
+                    Knight.attack()
+
     
         screen.fill((255, 255, 255))
 
