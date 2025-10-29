@@ -24,6 +24,8 @@ class Player():
         #Attacking state check
         self.isAttacking = False
 
+        self.offsetx = 0
+
 
         #Creating the path to the Animation sheets
         characterIdleAnimation = pygame.image.load("Assets/Character/PlayerIdle.png").convert_alpha()
@@ -38,11 +40,15 @@ class Player():
         attkSheet = animations.animationSheet(characterAttkAnimation)
         
 
+        idle_y_list = [38, 38, 38, 38, 38, 38] 
+        walk_y_list = [38, 38, 38, 38, 38, 38, 38, 38] # Example, you'll need actual values
+        attk_y_list = [38, 31, 32, 35, 41, 40] # Example, using the lowest point (31) for attack
+
 
         #Calling the method to construct the animation sheet
-        self.idleFrames = idleSheet.loadAnimation(41, 38, 16, 18, 84, 7, 6)
-        self.walkFrames = walkSheet.loadAnimation(41, 38, 16, 18, 84, 7, 8)
-        self.attkFrames = attkSheet.loadAnimation(41, 38, 16, 18, 84, 7, 6)
+        self.idleFrames = idleSheet.loadAnimation(41, idle_y_list, 16, 18, 84, 7, 6)
+        self.walkFrames = walkSheet.loadAnimation(41, walk_y_list, 16, 18, 84, 7, 8)
+        self.attkFrames = attkSheet.loadAnimation(41, attk_y_list, 32, 23, 68, 7, 6)
 
         #Storing all the animation into 1 list
         self.allCharacterAnimation.append(self.idleFrames)
@@ -137,8 +143,8 @@ class Player():
 
 
         #TEMP WILL CHANGE (TO ENSURE THEY DONT FALL OFF SCREEN)
-        if self.rect.bottom > 793:
-            self.rect.bottom = 793
+        if self.rect.bottom > 690:
+            self.rect.bottom = 690
             dy = 0
 
 
@@ -194,14 +200,15 @@ class Player():
 
 
 
-
-
         #Gets the wanted frame from the current list to be drawned
         frameDrawn = currentAnimationList[self.currentFrame]
 
 
         #The updated frame is shown to the screen
         self.characterAsset = pygame.transform.flip(frameDrawn, self.flip, False)
+
+
+        
 
 
 
