@@ -47,9 +47,9 @@ class Player():
 
 
         #Calling the method to construct the animation sheet
-        self.idleFrames = idleSheet.loadAnimation(41, idleYList, 16, 18, 84, 7, 6)
-        self.walkFrames = walkSheet.loadAnimation(41, walkYList, 16, 18, 84, 7, 8)
-        self.attkFrames = attkSheet.loadAnimation(41, attkYList, 32, 23, 68, 7, 6)
+        self.idleFrames = idleSheet.loadAnimation(41, idleYList, 16, 18, 84, 2.4, 6)
+        self.walkFrames = walkSheet.loadAnimation(41, walkYList, 16, 18, 84, 2.4, 8)
+        self.attkFrames = attkSheet.loadAnimation(41, attkYList, 32, 23, 68, 2.4, 6)
 
         #Storing all the animation into 1 list
         self.allCharacterAnimation.append(self.idleFrames)
@@ -91,7 +91,7 @@ class Player():
 
 
     #Player updater (draws the player on the screen) ---------------------------------------------------------------------------
-    def update(self):
+    def update(self, collisionTiles):
         
 
 
@@ -133,20 +133,53 @@ class Player():
         #Adding the delta y with the velocity to ensure player will go down after jumping and up when jumping
         dy += self.velocityY
     
+
+
         #Checking for collision
         self.rect.x += dx
+
+        
+
+        #Checking horizontal movement
+        for tile in collisionTiles:
+                if self.rect.colliderect(tile): #Checking for collition of tile
+                    if dx > 0: 
+                        self.rect.right = tile.left # Stop player at the left side of the tile
+                        dx = 0 # Stop horizontal movement
+
+
+
+
+                    elif dx < 0: 
+                        self.rect.left = tile.right # Stop player at the right side of the tile
+                        dx = 0 # Stop horizontal movement
+
+
+
+
+
+
+        #Check and apply vertical movement (Y-axis)
         self.rect.y += dy
+            
+        self.on_ground = False # Assume not on ground until a collision says otherwise
+            
+        for tile in collisionTiles:
+            if self.rect.colliderect(tile):
+                if dy > 0:
+                    self.rect.bottom = tile.top # Land player on top of the tile
+                    self.velocityY = 0 # Velocity = 0, stops gravity
+
+                    self.isJumping = False 
+                    self.on_ground = True
+
+
+                elif dy < 0:
+                    self.rect.top = tile.bottom # Stop player at the bottom of the tile
+                    self.velocityY = 0 #Stops player velocity going up 
 
 
 
-
-
-
-
-        #TEMP WILL CHANGE (TO ENSURE THEY DONT FALL OFF SCREEN)
-        if self.rect.bottom > 690:
-            self.rect.bottom = 690
-            dy = 0
 
 
 

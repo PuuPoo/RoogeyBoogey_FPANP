@@ -1,5 +1,69 @@
 import pygame
+from pytmx.util_pygame import load_pygame
 from Character.Player import Player
+from Functionality.Tile import Tile
+
+
+
+#Setting the tmx file for the map and background into groups and loading the data
+tmxData = load_pygame("Levels/TMX/Tutorial.tmx")
+backgroundSpriteGroup = pygame.sprite.Group()
+background2SpriteGroup = pygame.sprite.Group()
+decorationSpriteGroup = pygame.sprite.Group()
+liquidsSpriteGroup = pygame.sprite.Group()
+levelSpriteGroup = pygame.sprite.Group()
+
+#Making the empty list for the tiles that will have collision
+collisionTiles = []
+
+#Cycling through the layers in the data
+for layer in tmxData.layers:
+
+    targetGroup = None
+
+
+    # Assign tiles to their specific group based on name
+    if layer.name == "Background for background":
+        targetGroup = background2SpriteGroup
+    elif layer.name == "Background":
+        targetGroup = backgroundSpriteGroup
+    elif layer.name == "Level":
+        targetGroup = levelSpriteGroup
+    elif layer.name == "Decoration":
+        targetGroup = decorationSpriteGroup
+    elif layer.name == "Liquids":
+        targetGroup = liquidsSpriteGroup
+        
+
+
+    # Process the tiles for drawing and collision (X and Y are the coordinates, Surface is the image)
+    for x, y, surface in layer.tiles():
+        if surface:
+            position = (x * 32, y * 32)
+            
+            # Add to collision list if the tile is in the Level layer
+            if layer.name == "Level":
+                rect = pygame.Rect(x * 32, y * 32, 32, 32)
+                collisionTiles.append(rect)
+
+
+
+            #Add transparency if the tile is in the Liquids layer
+            elif layer.name == "Liquids":
+                surface.set_alpha(150) 
+                
+                position = (x * 32, y * 32)
+                Tile(pos = position, surface = surface, groups = liquidsSpriteGroup)
+            
+
+
+
+
+            # Add to the other layer to its own drawing group
+            if targetGroup is not None:
+                Tile(pos = position, surface = surface, groups = targetGroup)
+
+
 
 def Tutorial(screen):
 
@@ -45,11 +109,23 @@ def Tutorial(screen):
     
         screen.fill((255, 255, 255))
 
-
-        #Initalizing the Player into the game 
-        Knight.update()
+        
+        background2SpriteGroup.draw(screen)
+        backgroundSpriteGroup.draw(screen)
+        
+        levelSpriteGroup.draw(screen)
         
 
+
+
+
+        #Initalizing the Player into the game 
+        Knight.update(collisionTiles)
+        
+
+        
+        liquidsSpriteGroup.draw(screen)
+        decorationSpriteGroup.draw(screen)
 
         # updates the frames of the game 
         pygame.display.update()    
