@@ -4,11 +4,12 @@ from Functionality import animations
 screen = pygame.display.set_mode((928, 793))
 
 #Player Class
-class Player():
+class Player(pygame.sprite.Sprite):
     
 
     #Player Constructor
     def __init__(self, x, y):
+        super().__init__()
 
 
         #PLAYER ANIMATION
@@ -24,7 +25,6 @@ class Player():
         #Attacking state check
         self.isAttacking = False
 
-        self.offsetx = 0
 
 
         #Creating the path to the Animation sheets
@@ -68,14 +68,14 @@ class Player():
 
 
         #Sets the initial image that will be on screen
-        self.characterAsset = self.idleFrames[self.currentFrame]
+        self.image = self.idleFrames[self.currentFrame]
 
 
 
 
         
 
-        self.rect = self.characterAsset.get_rect()
+        self.rect = self.image.get_rect()
         self.rect.x = x
         self.rect.y = y
         self.velocityY = 0 #Y velocity to go up 
@@ -116,9 +116,6 @@ class Player():
             self.velocityY = -15
             self.isJumping = True
 
-        #Give back the ability for the player to jump again
-        if (key[pygame.K_w] or key[pygame.K_SPACE]) == False:
-            self.isJumping = False
 
 
 
@@ -239,13 +236,10 @@ class Player():
 
 
         #The updated frame is shown to the screen
-        self.characterAsset = pygame.transform.flip(frameDrawn, self.flip, False)
+        self.image = pygame.transform.flip(frameDrawn, self.flip, False)
 
 
         
 
 
-
-        #Drawing player into the screen
-        screen.blit(self.characterAsset, self.rect)
     

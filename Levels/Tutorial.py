@@ -2,16 +2,21 @@ import pygame
 from pytmx.util_pygame import load_pygame
 from Character.Player import Player
 from Functionality.Tile import Tile
+from Functionality.camera import Camera
 
 
 
 #Setting the tmx file for the map and background into groups and loading the data
 tmxData = load_pygame("Levels/TMX/Tutorial.tmx")
-backgroundSpriteGroup = pygame.sprite.Group()
-background2SpriteGroup = pygame.sprite.Group()
-decorationSpriteGroup = pygame.sprite.Group()
-liquidsSpriteGroup = pygame.sprite.Group()
-levelSpriteGroup = pygame.sprite.Group()
+
+#Initialized to camera class for scrolling purpose
+backgroundSpriteGroup = Camera()
+background2SpriteGroup = Camera()
+decorationSpriteGroup = Camera()
+liquidsSpriteGroup = Camera()
+levelSpriteGroup = Camera()
+
+playerGroup = Camera()
 
 #Making the empty list for the tiles that will have collision
 collisionTiles = []
@@ -29,7 +34,7 @@ for layer in tmxData.layers:
         targetGroup = backgroundSpriteGroup
     elif layer.name == "Level":
         targetGroup = levelSpriteGroup
-    elif layer.name == "Decoration":
+    elif layer.name == "Decorations":
         targetGroup = decorationSpriteGroup
     elif layer.name == "Liquids":
         targetGroup = liquidsSpriteGroup
@@ -53,7 +58,6 @@ for layer in tmxData.layers:
                 surface.set_alpha(150) 
                 
                 position = (x * 32, y * 32)
-                Tile(pos = position, surface = surface, groups = liquidsSpriteGroup)
             
 
 
@@ -87,7 +91,8 @@ def Tutorial(screen):
 
 
     #Making the character
-    Knight = Player(200, 200)
+    Knight = Player(400, 400)
+    playerGroup.add(Knight)
 
 
     while gameRunning:
@@ -109,23 +114,33 @@ def Tutorial(screen):
     
         screen.fill((255, 255, 255))
 
-        
-        background2SpriteGroup.draw(screen)
-        backgroundSpriteGroup.draw(screen)
-        
-        levelSpriteGroup.draw(screen)
-        
 
+        #Drawing the backgrounds to the game
+        
+        background2SpriteGroup.draw(Knight, screen)
+
+        liquidsSpriteGroup.draw(Knight, screen)
+
+        decorationSpriteGroup.draw(Knight, screen)
+
+        backgroundSpriteGroup.draw(Knight, screen)
+
+
+        
+        
+        levelSpriteGroup.draw(Knight, screen)
+        
+        
 
 
 
         #Initalizing the Player into the game 
         Knight.update(collisionTiles)
+
+        playerGroup.draw(Knight, screen)
         
 
-        
-        liquidsSpriteGroup.draw(screen)
-        decorationSpriteGroup.draw(screen)
+
 
         # updates the frames of the game 
         pygame.display.update()    
