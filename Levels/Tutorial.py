@@ -9,14 +9,18 @@ from Functionality.camera import Camera
 #Setting the tmx file for the map and background into groups and loading the data
 tmxData = load_pygame("Levels/TMX/Tutorial.tmx")
 
-#Initialized to camera class for scrolling purpose
-backgroundSpriteGroup = Camera()
-background2SpriteGroup = Camera()
-decorationSpriteGroup = Camera()
-liquidsSpriteGroup = Camera()
-levelSpriteGroup = Camera()
+#Clamping the camera to the map size to not go over
+mapWidth = tmxData.width * tmxData.tilewidth
+mapHeight = tmxData.height * tmxData.tileheight
 
-playerGroup = Camera()
+#Initialized to camera class for scrolling purpose
+backgroundSpriteGroup = Camera(mapWidth, mapHeight)
+background2SpriteGroup = Camera(mapWidth, mapHeight)
+decorationSpriteGroup = Camera(mapWidth, mapHeight)
+liquidsSpriteGroup = Camera(mapWidth, mapHeight)
+levelSpriteGroup = Camera(mapWidth, mapHeight)
+
+playerGroup = Camera(mapWidth, mapHeight)
 
 #Making the empty list for the tiles that will have collision
 collisionTiles = []

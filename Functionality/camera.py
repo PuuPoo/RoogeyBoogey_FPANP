@@ -3,8 +3,10 @@ from Character.Player import Player
 
 class Camera(pygame.sprite.Group):
 
-    def __init__(self):
+    def __init__(self, mapWidth = 0, mapHeight = 0):
         super().__init__()
+        self.mapWidth = mapWidth
+        self.mapHeight = mapHeight
 
 
     #Takes the player and the display that will be rendered
@@ -16,6 +18,28 @@ class Camera(pygame.sprite.Group):
         #Calculate horizontal and vertical offset  (Center of the screen - Players x and Y position in the world)
         offset.x = display.get_width() / 2 - target.rect.centerx
         offset.y = display.get_height() / 2 - target.rect.centery
+
+
+        #Clamping the camera to never go beyond map size
+        #Setting the maximum limit for top and left edge of the map
+        maxX = 0
+        maxY = 0
+
+        #Setting the limit for the bottom and right edge of the map
+        minX = display.get_width() - self.mapWidth
+        minY = display.get_height() - self.mapHeight
+
+        if offset.x > maxX:
+            offset.x = maxX
+        elif offset.x < minX:
+            offset.x = minX
+
+        if offset.y > maxY:
+            offset.y = maxY
+        elif offset.y < minY:
+            offset.y = minY
+
+
 
 
 
