@@ -17,6 +17,7 @@ mapHeight = tmxData.height * tmxData.tileheight
 backgroundSpriteGroup = Camera(mapWidth, mapHeight)
 background2SpriteGroup = Camera(mapWidth, mapHeight)
 decorationSpriteGroup = Camera(mapWidth, mapHeight)
+cloudsSpriteGroup = Camera(mapWidth, mapHeight)
 liquidsSpriteGroup = Camera(mapWidth, mapHeight)
 levelSpriteGroup = Camera(mapWidth, mapHeight)
 
@@ -40,6 +41,8 @@ for layer in tmxData.layers:
         targetGroup = levelSpriteGroup
     elif layer.name == "Decorations":
         targetGroup = decorationSpriteGroup
+    elif layer.name == "Clouds":
+        targetGroup = cloudsSpriteGroup
     elif layer.name == "Liquids":
         targetGroup = liquidsSpriteGroup
         
@@ -98,6 +101,8 @@ def Tutorial(screen):
     Knight = Player(400, 400)
     playerGroup.add(Knight)
 
+    
+
 
     while gameRunning:
         #Sets the tickrate to the targetted FPS
@@ -116,7 +121,7 @@ def Tutorial(screen):
                     Knight.attack()
 
     
-        screen.fill((255, 255, 255))
+        screen.fill((47,203,255))
 
 
         #Drawing the backgrounds to the game
@@ -124,6 +129,8 @@ def Tutorial(screen):
         background2SpriteGroup.draw(Knight, screen)
 
         liquidsSpriteGroup.draw(Knight, screen)
+
+        cloudsSpriteGroup.draw(Knight, screen)
 
         decorationSpriteGroup.draw(Knight, screen)
 

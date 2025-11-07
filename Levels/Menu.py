@@ -61,7 +61,7 @@ def menu():
     #Putting the BG pictures into a list and ensuring it loads as transparent 
     menuBGs = []
     for i in range(0, 12):
-        menuBG = pygame.image.load(f"Assets/MenuBGLayers/menuBG-{i}.png").convert_alpha()
+        menuBG = pygame.image.load(f"Assets/BGLayers/MenuBGLayers/menuBG-{i}.png").convert_alpha()
         menuBGs.append(menuBG)
     menuBGWidth = menuBGs[0].get_width() #gets the width of one of the images for the scrolling
             
@@ -140,10 +140,10 @@ def menu():
 
         #BUTTONS TO BE CLICKED BY USER
         #Play button
-        playButton = Button(image=pygame.image.load("Assets/MenuBGLayers/menuButtons/ButtonBG.png"), pos =(50, 580), textInput= "PLAY", font = pygame.font.Font(getFont(), 40), baseColor= "black", hoveringColor= "White")
+        playButton = Button(image=pygame.image.load("Assets/BGLayers/MenuBGLayers/menuButtons/ButtonBG.png"), pos =(50, 580), textInput= "PLAY", font = pygame.font.Font(getFont(), 40), baseColor= "black", hoveringColor= "White")
 
         #Quit button
-        quitButton = Button(image=pygame.image.load("Assets/MenuBGLayers/menuButtons/ButtonBG.png"), pos =(50, 730), textInput= "QUIT", font = pygame.font.Font(getFont(), 40), baseColor= "black", hoveringColor= "White")
+        quitButton = Button(image=pygame.image.load("Assets/BGLayers/MenuBGLayers/menuButtons/ButtonBG.png"), pos =(50, 730), textInput= "QUIT", font = pygame.font.Font(getFont(), 40), baseColor= "black", hoveringColor= "White")
 
 
 
