@@ -20,6 +20,7 @@ decorationSpriteGroup = Camera(mapWidth, mapHeight)
 cloudsSpriteGroup = Camera(mapWidth, mapHeight)
 liquidsSpriteGroup = Camera(mapWidth, mapHeight)
 levelSpriteGroup = Camera(mapWidth, mapHeight)
+finishedBlockSpriteGroup = Camera(mapWidth, mapHeight)
 
 playerGroup = Camera(mapWidth, mapHeight)
 
@@ -45,6 +46,8 @@ for layer in tmxData.layers:
         targetGroup = cloudsSpriteGroup
     elif layer.name == "Liquids":
         targetGroup = liquidsSpriteGroup
+    elif layer.name == "FinishedBlock":
+        targetGroup = finishedBlockSpriteGroup
         
 
 
@@ -132,9 +135,11 @@ def Tutorial(screen):
 
         cloudsSpriteGroup.draw(Knight, screen)
 
-        decorationSpriteGroup.draw(Knight, screen)
+
 
         backgroundSpriteGroup.draw(Knight, screen)
+
+        decorationSpriteGroup.draw(Knight, screen)
 
 
         
@@ -142,6 +147,7 @@ def Tutorial(screen):
         levelSpriteGroup.draw(Knight, screen)
         
         
+        finishedBlockSpriteGroup.draw(Knight, screen)
 
 
 

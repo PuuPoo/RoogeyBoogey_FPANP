@@ -112,7 +112,7 @@ class Player(pygame.sprite.Sprite):
             self.flip = False
 
         #Check for player input to jump 
-        if (key[pygame.K_w] or key[pygame.K_SPACE]) and self.isJumping == False:
+        if ((key[pygame.K_w] or key[pygame.K_SPACE]) and self.isJumping == False and self.velocityY == 0) :
             self.velocityY = -11
             self.isJumping = True
 
