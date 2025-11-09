@@ -155,6 +155,16 @@ def Tutorial(screen):
         Knight.update(collisionTiles)
 
         playerGroup.draw(Knight, screen)
+
+
+
+
+        #Checking for collision with the finishedBlockSpriteGroup
+        for sprite in finishedBlockSpriteGroup.sprites():
+            if Knight.rect.colliderect(sprite.rect):
+                from Levels.Level1 import Level1
+                Level1(screen)
+                return
         
 
 
