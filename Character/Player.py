@@ -222,6 +222,3 @@ class Player(pygame.sprite.Sprite):
 
         #The updated frame is shown to the screen
         self.image = pygame.transform.flip(frameDrawn, self.flip, False)
-
-        old_center = self.rect.center
-        self.rect = self.image.get_rect(center=old_center)
