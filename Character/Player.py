@@ -22,39 +22,29 @@ class Player(pygame.sprite.Sprite):
         #Counter to track the previous action state
         self.previousAction = 0
 
-        #Attacking state check
-        self.isAttacking = False
-
 
 
         #Creating the path to the Animation sheets
         characterIdleAnimation = pygame.image.load("Assets/Character/PlayerIdle.png").convert_alpha()
         characterWalkAnimation = pygame.image.load("Assets/Character/PlayerWalk.png").convert_alpha()
-        characterAttkAnimation = pygame.image.load("Assets/Character/PlayerAttk.png").convert_alpha()
-
 
 
         #Making the animation class and sending the folder path
         idleSheet = animations.animationSheet(characterIdleAnimation)
-        walkSheet = animations.animationSheet(characterWalkAnimation)
-        attkSheet = animations.animationSheet(characterAttkAnimation)
-        
+        walkSheet = animations.animationSheet(characterWalkAnimation)        
 
         #Made the list of the frames starting y coordinates cuz cant find logic to do it well
         idleYList = [38, 38, 38, 38, 38, 38] 
         walkYList = [38, 38, 38, 38, 38, 38, 38, 38] 
-        attkYList = [38, 31, 32, 35, 41, 40] 
 
 
         #Calling the method to construct the animation sheet
         self.idleFrames = idleSheet.loadAnimation(41, idleYList, 16, 18, 84, 2.4, 6)
         self.walkFrames = walkSheet.loadAnimation(41, walkYList, 16, 18, 84, 2.4, 8)
-        self.attkFrames = attkSheet.loadAnimation(41, attkYList, 32, 23, 68, 2.4, 6)
 
         #Storing all the animation into 1 list
         self.allCharacterAnimation.append(self.idleFrames)
         self.allCharacterAnimation.append(self.walkFrames)
-        self.allCharacterAnimation.append(self.attkFrames)
 
 
 
@@ -82,16 +72,8 @@ class Player(pygame.sprite.Sprite):
         self.isJumping = False #Checks if player jumps
 
 
-    #Player Attack Animation --------------------------------------------------------------------------------------
-    def attack(self):
-        if self.isAttacking == False:
-            self.isAttacking = True
-            self.currentFrame = 0
-            self.frameTimer = 0
-
-
     #Player updater (draws the player on the screen) ---------------------------------------------------------------------------
-    def update(self, collisionTiles):
+    def update(self, collisionTiles, platformCollisionTiles = None):
         
 
 
@@ -113,7 +95,7 @@ class Player(pygame.sprite.Sprite):
 
         #Check for player input to jump 
         if ((key[pygame.K_w] or key[pygame.K_SPACE]) and self.isJumping == False and self.velocityY == 0) :
-            self.velocityY = -11
+            self.velocityY = -13
             self.isJumping = True
 
 
@@ -156,6 +138,7 @@ class Player(pygame.sprite.Sprite):
 
 
 
+
         #Check and apply vertical movement (Y-axis)
         self.rect.y += dy
             
@@ -176,6 +159,17 @@ class Player(pygame.sprite.Sprite):
                     self.velocityY = 0 #Stops player velocity going up 
 
 
+        #Checking collision for one-way platform
+        if platformCollisionTiles is not None:
+            for tile in platformCollisionTiles:
+                if dy > 0 and self.rect.colliderect(tile):
+                    prev_bottom = self.rect.bottom - dy
+
+                    if prev_bottom <= tile.top:
+                            self.rect.bottom = tile.top # Land player on top of the tile
+                            self.velocityY = 0 # Stops gravity
+                            self.isJumping = False 
+                            self.on_ground = True
 
 
 
@@ -185,11 +179,8 @@ class Player(pygame.sprite.Sprite):
 
 
 
-        #ANIMATION LOGIC ----------------------------------------------------------------------------------------
-        #Changing animation based on movement
-        if self.isAttacking:
-            self.action = 2
-        elif dx != 0:
+        #ANIMATION LOGIC ---------------------------------------------------------------------------------------
+        if dx != 0:
             self.action = 1
         else:
             self.action = 0
@@ -218,15 +209,9 @@ class Player(pygame.sprite.Sprite):
             self.currentFrame += 1
             self.frameTimer = 0
 
-            #Checks if the attack animation is over
-            if self.action == 2 and self.currentFrame >= len(currentAnimationList):
-                self.isAttacking = False  # Resets the attack back to false
-                self.action = 0           # Return to idle animation
-                self.currentFrame = 0     # Start the idle animation from frame 0
-
-            # For all other animations, loop normally
-            elif self.currentFrame >= len(currentAnimationList):
-                self.currentFrame = 0
+        # For all other animations, loop normally
+        if self.currentFrame >= len(currentAnimationList):
+            self.currentFrame = 0
 
 
 
@@ -238,8 +223,5 @@ class Player(pygame.sprite.Sprite):
         #The updated frame is shown to the screen
         self.image = pygame.transform.flip(frameDrawn, self.flip, False)
 
-
-        
-
-
-    
+        old_center = self.rect.center
+        self.rect = self.image.get_rect(center=old_center)

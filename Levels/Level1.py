@@ -15,6 +15,7 @@ mapHeight = tmxData.height * tmxData.tileheight
 
 
 levelSpriteGroup = Camera(mapWidth, mapHeight)
+platformSpriteGroup = Camera(mapWidth, mapHeight)
 
 
 
@@ -23,6 +24,7 @@ playerGroup = Camera(mapWidth, mapHeight)
 
 #Making the empty list for the tiles that will have collision
 collisionTiles = []
+platformCollisionTiles = []
 
 
 
@@ -38,6 +40,9 @@ for layer in tmxData.layers:
     if layer.name == "Level":
         targetGroup = levelSpriteGroup
 
+    elif layer.name == "Platform":
+        targetGroup = platformSpriteGroup
+
 
     # Process the tiles for drawing and collision (X and Y are the coordinates, Surface is the image)
     for x, y, surface in layer.tiles():
@@ -48,6 +53,10 @@ for layer in tmxData.layers:
             if layer.name == "Level":
                 rect = pygame.Rect(x * 32, y * 32, 32, 32)
                 collisionTiles.append(rect)
+
+            elif layer.name == "Platform":
+                rect = pygame.Rect(x * 32, y * 32, 32, 32)
+                platformCollisionTiles.append(rect)
 
 
 
@@ -106,21 +115,20 @@ def Level1(screen):
             if event.type == pygame.QUIT:
                 gameRunning = False
 
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                if event.button == 1:
-                    Knight.attack()
-
     
         screen.fill((47,203,255))
 
 
         levelSpriteGroup.draw(Knight, screen)
 
+        platformSpriteGroup.draw(Knight, screen)
+
 
         #Initalizing the Player into the game 
-        Knight.update(collisionTiles)
+        Knight.update(collisionTiles, platformCollisionTiles)
 
         playerGroup.draw(Knight, screen)
+        
 
 
         # updates the frames of the game 
