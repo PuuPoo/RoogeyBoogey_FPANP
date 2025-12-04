@@ -14,8 +14,14 @@ mapWidth = tmxData.width * tmxData.tilewidth
 mapHeight = tmxData.height * tmxData.tileheight
 
 
+#Layers in tmx map 
 levelSpriteGroup = Camera(mapWidth, mapHeight)
 platformSpriteGroup = Camera(mapWidth, mapHeight)
+finishedBlockSpriteGroup = Camera(mapWidth, mapHeight)
+decorationsSpriteGroup = Camera(mapWidth, mapHeight)
+liquidsSpriteGroup = Camera(mapWidth, mapHeight)
+backgroundSpriteGroup = Camera(mapWidth, mapHeight)
+
 
 
 
@@ -39,9 +45,16 @@ for layer in tmxData.layers:
     # Assign tiles to their specific group based on name
     if layer.name == "Level":
         targetGroup = levelSpriteGroup
-
     elif layer.name == "Platform":
         targetGroup = platformSpriteGroup
+    elif layer.name == "FinishedBlock":
+        targetGroup = finishedBlockSpriteGroup
+    elif layer.name == "Decorations":
+        targetGroup = decorationsSpriteGroup
+    elif layer.name == "Liquids":
+        targetGroup = liquidsSpriteGroup
+    elif layer.name == "Background":
+        targetGroup = backgroundSpriteGroup
 
 
     # Process the tiles for drawing and collision (X and Y are the coordinates, Surface is the image)
@@ -119,9 +132,20 @@ def Level1(screen):
         screen.fill((47,203,255))
 
 
-        levelSpriteGroup.draw(Knight, screen)
+
+        #Drawing the layers
+        backgroundSpriteGroup.draw(Knight, screen)
+
+        liquidsSpriteGroup.draw(Knight, screen)
+
+        decorationsSpriteGroup.draw(Knight, screen)
+
+        finishedBlockSpriteGroup.draw(Knight, screen)
 
         platformSpriteGroup.draw(Knight, screen)
+
+        levelSpriteGroup.draw(Knight, screen)
+
 
 
         #Initalizing the Player into the game 
