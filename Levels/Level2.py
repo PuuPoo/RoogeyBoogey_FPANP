@@ -5,27 +5,36 @@ from Functionality.Tile import Tile
 from Functionality.camera import Camera
 
 
-
 #Setting the tmx file for the map and background into groups and loading the data
-tmxData = load_pygame("Levels/TMX/Tutorial.tmx")
+tmxData = load_pygame("Levels/TMX/Level2.tmx")
+
 
 #Clamping the camera to the map size to not go over
 mapWidth = tmxData.width * tmxData.tilewidth
 mapHeight = tmxData.height * tmxData.tileheight
 
-#Initialized to camera class for scrolling purpose
-backgroundSpriteGroup = Camera(mapWidth, mapHeight)
-background2SpriteGroup = Camera(mapWidth, mapHeight)
-decorationSpriteGroup = Camera(mapWidth, mapHeight)
-cloudsSpriteGroup = Camera(mapWidth, mapHeight)
-liquidsSpriteGroup = Camera(mapWidth, mapHeight)
+
+#Layers in tmx map 
 levelSpriteGroup = Camera(mapWidth, mapHeight)
+platformSpriteGroup = Camera(mapWidth, mapHeight)
 finishedBlockSpriteGroup = Camera(mapWidth, mapHeight)
+decorationsSpriteGroup = Camera(mapWidth, mapHeight)
+liquidsSpriteGroup = Camera(mapWidth, mapHeight)
+backgroundSpriteGroup = Camera(mapWidth, mapHeight)
+
+
+
 
 playerGroup = Camera(mapWidth, mapHeight)
 
+
 #Making the empty list for the tiles that will have collision
 collisionTiles = []
+platformCollisionTiles = []
+
+
+
+
 
 #Cycling through the layers in the data
 for layer in tmxData.layers:
@@ -34,21 +43,18 @@ for layer in tmxData.layers:
 
 
     # Assign tiles to their specific group based on name
-    if layer.name == "Background for background":
-        targetGroup = background2SpriteGroup
-    elif layer.name == "Background":
-        targetGroup = backgroundSpriteGroup
-    elif layer.name == "Level":
+    if layer.name == "Level":
         targetGroup = levelSpriteGroup
-    elif layer.name == "Decorations":
-        targetGroup = decorationSpriteGroup
-    elif layer.name == "Clouds":
-        targetGroup = cloudsSpriteGroup
-    elif layer.name == "Liquids":
-        targetGroup = liquidsSpriteGroup
+    elif layer.name == "Platform":
+        targetGroup = platformSpriteGroup
     elif layer.name == "FinishedBlock":
         targetGroup = finishedBlockSpriteGroup
-        
+    elif layer.name == "Decorations":
+        targetGroup = decorationsSpriteGroup
+    elif layer.name == "Liquids":
+        targetGroup = liquidsSpriteGroup
+    elif layer.name == "Background":
+        targetGroup = backgroundSpriteGroup
 
 
     # Process the tiles for drawing and collision (X and Y are the coordinates, Surface is the image)
@@ -60,6 +66,10 @@ for layer in tmxData.layers:
             if layer.name == "Level":
                 rect = pygame.Rect(x * 32, y * 32, 32, 32)
                 collisionTiles.append(rect)
+
+            elif layer.name == "Platform":
+                rect = pygame.Rect(x * 32, y * 32, 32, 32)
+                platformCollisionTiles.append(rect)
 
 
 
@@ -79,13 +89,11 @@ for layer in tmxData.layers:
 
 
 
-def Tutorial(screen):
-
+def Level2(screen):
 
 
     #Setting the screen size
     pygame.display.set_caption("Roogey Boogey")
-
 
 
     #Initializing the clock class from pygame library 
@@ -95,18 +103,17 @@ def Tutorial(screen):
 
 
 
-
-
-    #RUNNING THE TUTORIAL
+    #RUNNING THE LEVEL
     #Setting the variable to be used to check if the game is running
     gameRunning = True
 
 
     #Making the character
-    Knight = Player(400, 400)
+    Knight = Player(97, 1048)
     playerGroup.add(Knight)
 
-    
+
+
 
 
     while gameRunning:
@@ -121,60 +128,37 @@ def Tutorial(screen):
             if event.type == pygame.QUIT:
                 gameRunning = False
 
-
     
         screen.fill((47,203,255))
 
 
-        #Drawing the backgrounds to the game
-        
-        background2SpriteGroup.draw(Knight, screen)
+
+        #Drawing the layers
+
+        """
+        backgroundSpriteGroup.draw(Knight, screen)
 
         liquidsSpriteGroup.draw(Knight, screen)
 
-        cloudsSpriteGroup.draw(Knight, screen)
+        decorationsSpriteGroup.draw(Knight, screen)
 
-
-
-        backgroundSpriteGroup.draw(Knight, screen)
-
-        decorationSpriteGroup.draw(Knight, screen)
-
-
-        
-        
-        levelSpriteGroup.draw(Knight, screen)
-        
-        
         finishedBlockSpriteGroup.draw(Knight, screen)
+
+        platformSpriteGroup.draw(Knight, screen)
+        """
+
+        levelSpriteGroup.draw(Knight, screen)
 
 
 
         #Initalizing the Player into the game 
-        Knight.update(collisionTiles)
+        Knight.update(collisionTiles, platformCollisionTiles)
 
         playerGroup.draw(Knight, screen)
         
-
-        #Checks if the knight collides with the liquid block
-        for sprite in liquidsSpriteGroup.sprites():
-            if Knight.rect.colliderect(sprite.rect):
-                Knight.kill()
-                Tutorial(screen)
-                return
-
-
-        #Checking for collision with the finishedBlockSpriteGroup
-        for sprite in finishedBlockSpriteGroup.sprites():
-            if Knight.rect.colliderect(sprite.rect):
-                from Levels.Level1 import Level1
-                Level1(screen)
-                return
-        
-
-
-
         # updates the frames of the game 
         pygame.display.update()    
 
     pygame.quit()
+
+
