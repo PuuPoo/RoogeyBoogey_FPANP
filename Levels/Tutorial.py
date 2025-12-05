@@ -78,7 +78,9 @@ for layer in tmxData.layers:
                 Tile(pos = position, surface = surface, groups = targetGroup)
 
 
-
+#SFX loading and playing
+pygame.mixer.init()
+teleportSound = pygame.mixer.Sound("Assets/SFX/Teleport.mp3")
 
 
 def Tutorial(screen):
@@ -169,6 +171,7 @@ def Tutorial(screen):
         #Checking for collision with the finishedBlockSpriteGroup
         for sprite in finishedBlockSpriteGroup.sprites():
             if Knight.rect.colliderect(sprite.rect):
+                teleportSound.play()
                 from Levels.Level1 import Level1
                 Level1(screen)
                 return
