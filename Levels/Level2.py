@@ -143,9 +143,8 @@ def Level2(screen):
         decorationsSpriteGroup.draw(Knight, screen)
 
         finishedBlockSpriteGroup.draw(Knight, screen)
-
-        platformSpriteGroup.draw(Knight, screen)
         """
+        platformSpriteGroup.draw(Knight, screen)
 
         levelSpriteGroup.draw(Knight, screen)
 
