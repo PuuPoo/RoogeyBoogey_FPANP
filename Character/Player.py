@@ -3,6 +3,11 @@ from Functionality import animations
 
 screen = pygame.display.set_mode((928, 793))
 
+
+#SFX loading and playing
+pygame.mixer.init()
+jumpSound = pygame.mixer.Sound("Assets/SFX/KnightJump.mp3")
+
 #Player Class
 class Player(pygame.sprite.Sprite):
     
@@ -97,6 +102,7 @@ class Player(pygame.sprite.Sprite):
         if ((key[pygame.K_w] or key[pygame.K_SPACE]) and self.isJumping == False and self.velocityY == 0) :
             self.velocityY = -12
             self.isJumping = True
+            jumpSound.play()
 
 
 

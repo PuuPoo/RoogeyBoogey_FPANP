@@ -112,6 +112,17 @@ def menu():
     nextScreen = None
 
 
+
+    #BGM loading and playing
+    pygame.mixer.init()
+    pygame.mixer.music.load("Assets/BGM/TutorialBGM.ogg")
+    pygame.mixer.music.play(-1, 0.0) # -1 = looping continously, 0.0 the timestamp
+
+
+    #SFX loading and playing
+    buttonSound = pygame.mixer.Sound("Assets/SFX/ButtonPress.mp3")
+
+
     while gameRunning:
 
 
@@ -168,6 +179,7 @@ def menu():
                 
             if event.type == pygame.MOUSEBUTTONDOWN:
                 if playButton.checkForInput(mousePos):
+                    buttonSound.play()
                     nextScreen = "Tutorial"
                     gameRunning = False
 
