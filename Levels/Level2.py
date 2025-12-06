@@ -135,7 +135,7 @@ def Level2(screen):
 
         #Drawing the layers
 
-        """
+
         backgroundSpriteGroup.draw(Knight, screen)
 
         liquidsSpriteGroup.draw(Knight, screen)
@@ -143,7 +143,7 @@ def Level2(screen):
         decorationsSpriteGroup.draw(Knight, screen)
 
         finishedBlockSpriteGroup.draw(Knight, screen)
-        """
+
         platformSpriteGroup.draw(Knight, screen)
 
         levelSpriteGroup.draw(Knight, screen)
@@ -154,6 +154,15 @@ def Level2(screen):
         Knight.update(collisionTiles, platformCollisionTiles)
 
         playerGroup.draw(Knight, screen)
+
+
+        #Checks if the knight collides with the liquid block
+        for sprite in liquidsSpriteGroup.sprites():
+            if Knight.rect.colliderect(sprite.rect):
+                Knight.kill()
+                Level2(screen)
+                return
+
         
         # updates the frames of the game 
         pygame.display.update()    
