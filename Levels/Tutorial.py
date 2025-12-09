@@ -81,6 +81,7 @@ for layer in tmxData.layers:
 #SFX loading and playing
 pygame.mixer.init()
 teleportSound = pygame.mixer.Sound("Assets/SFX/Teleport.mp3")
+deathSound = pygame.mixer.Sound("Assets/SFX/Death.mp3")
 
 
 def Tutorial(screen):
@@ -163,6 +164,7 @@ def Tutorial(screen):
         #Checks if the knight collides with the liquid block
         for sprite in liquidsSpriteGroup.sprites():
             if Knight.rect.colliderect(sprite.rect):
+                deathSound.play()
                 Knight.kill()
                 Tutorial(screen)
                 return

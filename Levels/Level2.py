@@ -88,6 +88,10 @@ for layer in tmxData.layers:
                 Tile(pos = position, surface = surface, groups = targetGroup)
 
 
+pygame.mixer.init()
+teleportSound = pygame.mixer.Sound("Assets/SFX/Teleport.mp3")
+deathSound = pygame.mixer.Sound("Assets/SFX/Death.mp3")
+
 
 def Level2(screen):
 
@@ -159,8 +163,18 @@ def Level2(screen):
         #Checks if the knight collides with the liquid block
         for sprite in liquidsSpriteGroup.sprites():
             if Knight.rect.colliderect(sprite.rect):
+                deathSound.play()
                 Knight.kill()
                 Level2(screen)
+                return
+            
+            
+        #Checking for collision with the finishedBlockSpriteGroup
+        for sprite in finishedBlockSpriteGroup.sprites():
+            if Knight.rect.colliderect(sprite.rect):
+                teleportSound.play()
+                from Levels.TBC import TBC
+                TBC(screen)
                 return
 
         
